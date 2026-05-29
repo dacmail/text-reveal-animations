@@ -4,7 +4,7 @@
 export const MAX_CHARS = 80;
 
 // Texto por defecto que se muestra al cargar.
-export const DEFAULT_TEXT = "El scroll revela el texto";
+export const DEFAULT_TEXT = "Text reveal animation";
 
 // Tamaño por defecto (px).
 export const DEFAULT_SIZE = 64;
