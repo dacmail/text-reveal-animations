@@ -208,6 +208,22 @@ input[type="range"]::-moz-range-thumb {
 /* Wrapper de clip vertical */
 .te-clip { overflow: hidden; padding: 0.1em 0.05em; }
 
+/* Parallax: capa de fondo tenue tras el texto principal */
+.te-parallax-stage { position: relative; }
+.te-parallax-bg {
+  position: absolute;
+  left: 50%; top: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: 800;
+  line-height: 1;
+  white-space: nowrap;
+  color: var(--accent);
+  opacity: 0.12;
+  pointer-events: none;
+  z-index: 0;
+  will-change: transform;
+}
+
 /* Code snippet */
 .te-code {
   margin-top: 2rem;
