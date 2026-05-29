@@ -172,6 +172,32 @@ input[type="range"]::-moz-range-thumb {
 }
 .te-index { color: var(--accent); }
 .te-label { color: var(--text); }
+
+/* Ancla "#" para copiar el enlace a la sección: aparece al hacer hover */
+.te-anchor {
+  position: absolute;
+  left: -1.4rem;
+  font-size: 0.85rem;
+  line-height: 1;
+  text-decoration: none;
+  color: var(--muted);
+  opacity: 0;
+  transition: opacity 0.18s, color 0.18s;
+}
+.te-meta:hover .te-anchor { opacity: 1; }
+.te-anchor:hover { color: var(--accent); }
+.te-anchor.copied { opacity: 1; color: var(--accent); }
+.te-anchor.copied::after {
+  content: "copiado";
+  position: absolute;
+  left: 1.1rem;
+  top: 0.05rem;
+  font-size: 0.55rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent);
+  white-space: nowrap;
+}
 .te-code-toggle {
   font-family: var(--mono);
   font-size: 0.58rem;

@@ -33,6 +33,7 @@ function buildSections() {
     const meta = document.createElement("div");
     meta.className = "te-meta";
     meta.innerHTML = `
+      <a class="te-anchor" href="#fx-${effect.id}" title="Copiar enlace a esta sección" aria-label="Copiar enlace a esta sección">#</a>
       <span class="te-index">${String(i + 1).padStart(2, "0")}</span>
       <span class="te-group">${effect.group}</span>
       <span class="te-label">${effect.label}</span>
@@ -56,6 +57,24 @@ function buildSections() {
       const open = pre.hidden;
       pre.hidden = !open;
       e.target.setAttribute("aria-expanded", String(open));
+    });
+
+    // Copiar enlace a la sección al pulsar el #
+    const anchor = meta.querySelector(".te-anchor");
+    anchor.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const url = `${location.origin}${location.pathname}#fx-${effect.id}`;
+      history.replaceState(null, "", `#fx-${effect.id}`);
+      try {
+        await navigator.clipboard.writeText(url);
+      } catch (_) {
+        // Fallback si el portapapeles no está disponible
+        const ta = document.createElement("textarea");
+        ta.value = url; document.body.appendChild(ta); ta.select();
+        document.execCommand("copy"); ta.remove();
+      }
+      anchor.classList.add("copied");
+      setTimeout(() => anchor.classList.remove("copied"), 1200);
     });
 
     section.appendChild(meta);
