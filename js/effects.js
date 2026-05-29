@@ -338,15 +338,40 @@ gsap.from(words, {
     id: "parallax",
     group: "Movimiento",
     label: "Parallax text",
-    code: `gsap.fromTo(el, { yPercent: 40 }, { yPercent: -40, ease: "none",
-  scrollTrigger: { trigger: el.parentElement, start: "top bottom", end: "bottom top", scrub: true } });`,
+    code: `// dos capas a distinta velocidad = sensación de profundidad
+const stage = el.closest(".te-stage");
+const bg = document.createElement("div"); // texto de fondo grande y tenue
+bg.className = "te-parallax-bg"; bg.textContent = el.dataset.text;
+stage.appendChild(bg);
+gsap.fromTo(el, { yPercent: 60 }, { yPercent: -60, ease: "none",
+  scrollTrigger: { trigger: stage, start: "top bottom", end: "bottom top", scrub: true } });
+gsap.fromTo(bg, { yPercent: -40 }, { yPercent: 40, ease: "none",
+  scrollTrigger: { trigger: stage, start: "top bottom", end: "bottom top", scrub: true } });`,
     run(el) {
       setPlain(el, el.dataset.text);
-      const t = gsap.fromTo(el,
-        { yPercent: 30 },
-        { yPercent: -30, ease: "none",
-          scrollTrigger: { trigger: el.closest(".te-section"), start: "top bottom", end: "bottom top", scrub: true } });
-      return fromTween(t);
+      const section = el.closest(".te-section");
+
+      // Capa de fondo: misma palabra, grande y tenue, que se mueve al revés.
+      const stage = el.closest(".te-stage");
+      stage.classList.add("te-parallax-stage");
+      const bg = document.createElement("div");
+      bg.className = "te-parallax-bg";
+      bg.textContent = el.dataset.text;
+      bg.style.fontFamily = el.style.fontFamily;
+      bg.style.fontSize = `${parseFloat(el.style.fontSize || 64) * 1.8}px`;
+      stage.appendChild(bg);
+
+      // Primer plano y fondo se mueven a distinta velocidad y sentido.
+      const tFront = gsap.fromTo(el,
+        { yPercent: 60 },
+        { yPercent: -60, ease: "none",
+          scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true } });
+      const tBack = gsap.fromTo(bg,
+        { yPercent: -40 },
+        { yPercent: 40, ease: "none",
+          scrollTrigger: { trigger: section, start: "top bottom", end: "bottom top", scrub: true } });
+
+      return () => { fromTween(tFront)(); fromTween(tBack)(); bg.remove(); stage.classList.remove("te-parallax-stage"); };
     },
   },
 
