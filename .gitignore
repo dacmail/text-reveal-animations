@@ -1,0 +1,11 @@
+# Preview / herramientas locales
+.claude/
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+
+# Dependencias (no se usan, pero por si acaso)
+node_modules/
