@@ -6,8 +6,8 @@ export const MAX_CHARS = 80;
 // Texto por defecto que se muestra al cargar.
 export const DEFAULT_TEXT = "Text reveal animation";
 
-// Tamaño por defecto (px).
-export const DEFAULT_SIZE = 64;
+// Tamaño por defecto (px). En móvil se reduce para que el texto quepa bien.
+export const DEFAULT_SIZE = window.innerWidth <= 720 ? 40 : 64;
 export const MIN_SIZE = 24;
 export const MAX_SIZE = 120;
 
