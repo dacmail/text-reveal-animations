@@ -428,7 +428,7 @@ input[type="range"]::-moz-range-thumb {
 
 /* ============================== RESPONSIVE ============================== */
 @media (max-width: 720px) {
-  /* Panel apilado: brand arriba, controles abajo con scroll horizontal interno */
+  /* Panel: brand arriba, controles en dos filas visibles */
   .panel {
     flex-direction: column;
     align-items: stretch;
@@ -436,31 +436,34 @@ input[type="range"]::-moz-range-thumb {
     padding: 0.5rem 0.75rem;
   }
   .panel-controls {
-    gap: 0.5rem;
-    overflow-x: auto;
-    overflow-y: visible;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.5rem;
     align-items: flex-end;
+    overflow: visible;
   }
-  .panel-controls::-webkit-scrollbar { display: none; }
 
-  .field-text input { min-width: 110px; width: 110px; }
-  input[type="range"] { width: 70px; }
+  /* Fila 1: input de texto (crece) + botón tema */
+  .field-text { order: 1; flex: 1 1 auto; min-width: 0; }
+  .field-text input { width: 100%; min-width: 0; box-sizing: border-box; }
+  .counter { display: none; }
+  #ctl-theme { order: 2; flex-shrink: 0; }
 
-  /* Secciones: más padding-top para cubrir el panel de dos filas */
-  .te-section { padding: 8rem 1.25rem 4rem; }
-  .te-meta { top: 6.5rem; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
+  /* Fila 2: fuente + peso + tamaño (en DOM order: 0 < 1, wrappean abajo) */
+  .field:not(.field-text) { order: 3; flex-shrink: 0; }
+  .field select { max-width: 110px; }
+  input[type="range"] { width: 65px; }
+
+  /* Secciones: padding-top generoso para el panel de 3 filas */
+  .te-section { padding: 10.5rem 1.25rem 4rem; }
+  .te-meta { top: 9rem; flex-wrap: wrap; justify-content: center; gap: 0.5rem; }
 
   .te-code { font-size: 0.6rem; padding: 0.75rem 0.9rem; }
 }
 
 @media (max-width: 480px) {
-  .te-section { padding: 8.5rem 0.85rem 3.5rem; }
-  .te-meta { top: 7rem; }
-  .field-text input { min-width: 90px; width: 90px; }
-  .field select { font-size: 0.65rem; }
+  .te-section { padding: 11rem 0.85rem 3.5rem; }
+  .te-meta { top: 9.5rem; }
+  .field select { max-width: 90px; font-size: 0.65rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {
