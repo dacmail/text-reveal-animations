@@ -529,4 +529,441 @@ gsap.fromTo(chars, { color: "var(--muted)" },
       return fromTween(t);
     },
   },
+
+  // ===================== MÁSCARA / CLIP (nuevos) =====================
+  {
+    id: "iris",
+    group: "Máscara / Clip",
+    label: "Iris / circle reveal",
+    code: `gsap.fromTo(el, { clipPath: "circle(0% at 50% 50%)" },
+  { clipPath: "circle(75% at 50% 50%)", duration: 1, ease: "power2.out",
+    scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      const t = gsap.fromTo(el,
+        { clipPath: "circle(0% at 50% 50%)" },
+        { clipPath: "circle(75% at 50% 50%)", duration: 1, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 80%", toggleActions: TOGGLE } });
+      return fromTween(t);
+    },
+  },
+  {
+    id: "diagonal-wipe",
+    group: "Máscara / Clip",
+    label: "Diagonal wipe",
+    code: `gsap.fromTo(el, { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" },
+  { clipPath: "polygon(0 0, 130% 0, 100% 100%, 0 100%)", duration: 1, ease: "power3.inOut",
+    scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      const t = gsap.fromTo(el,
+        { clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)" },
+        { clipPath: "polygon(0 0, 130% 0, 100% 100%, 0 100%)", duration: 1, ease: "power3.inOut",
+          scrollTrigger: { trigger: el, start: "top 80%", toggleActions: TOGGLE } });
+      return fromTween(t);
+    },
+  },
+  {
+    id: "block-reveal",
+    group: "Máscara / Clip",
+    label: "Block reveal",
+    code: `// una barra de color cruza y deja el texto detrás
+const bar = document.createElement("span"); bar.className = "te-block-bar";
+el.parentElement.appendChild(bar);
+gsap.set(el, { opacity: 0 });
+const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });
+tl.fromTo(bar, { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.4, ease: "power2.in" })
+  .set(el, { opacity: 1 })
+  .to(bar, { scaleX: 0, transformOrigin: "right center", duration: 0.4, ease: "power2.out" });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      const wrap = el.parentElement;
+      wrap.style.position = "relative";
+      const bar = document.createElement("span");
+      bar.className = "te-block-bar";
+      wrap.appendChild(bar);
+      gsap.set(el, { opacity: 0 });
+      const tl = gsap.timeline({ scrollTrigger: { trigger: el, start: "top 80%", toggleActions: TOGGLE } });
+      tl.fromTo(bar, { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.4, ease: "power2.in" })
+        .set(el, { opacity: 1 })
+        .to(bar, { scaleX: 0, transformOrigin: "right center", duration: 0.4, ease: "power2.out" });
+      return () => { tl.scrollTrigger && tl.scrollTrigger.kill(); tl.kill(); bar.remove(); gsap.set(el, { opacity: 1 }); };
+    },
+  },
+  {
+    id: "split-reveal",
+    group: "Máscara / Clip",
+    label: "Split reveal (centro)",
+    code: `gsap.fromTo(el, { clipPath: "inset(0 50% 0 50%)" },
+  { clipPath: "inset(0 0% 0 0%)", duration: 0.9, ease: "power3.out",
+    scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      const t = gsap.fromTo(el,
+        { clipPath: "inset(0 50% 0 50%)" },
+        { clipPath: "inset(0 0% 0 0%)", duration: 0.9, ease: "power3.out",
+          scrollTrigger: { trigger: el, start: "top 82%", toggleActions: TOGGLE } });
+      return fromTween(t);
+    },
+  },
+
+  // ===================== MOVIMIENTO / FÍSICA (nuevos) =====================
+  {
+    id: "elastic-in",
+    group: "Movimiento",
+    label: "Elastic in",
+    code: `gsap.from(el, { y: 90, opacity: 0, duration: 1.2, ease: "elastic.out(1, 0.4)",
+  scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      const t = gsap.from(el, {
+        y: 90, opacity: 0, duration: 1.2, ease: "elastic.out(1, 0.4)",
+        scrollTrigger: { trigger: el, start: "top 82%", toggleActions: TOGGLE },
+      });
+      return fromTween(t);
+    },
+  },
+  {
+    id: "skew-slide",
+    group: "Movimiento",
+    label: "Skew slide",
+    code: `const words = splitWords(el);
+gsap.from(words, { x: -70, skewX: 18, opacity: 0, stagger: 0.06, duration: 0.7, ease: "power3.out",
+  scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      const words = splitWords(el, el.dataset.text);
+      const t = gsap.from(words, {
+        x: -70, skewX: 18, opacity: 0, stagger: 0.06, duration: 0.7, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 82%", toggleActions: TOGGLE },
+      });
+      return fromTween(t);
+    },
+  },
+  {
+    id: "scatter",
+    group: "Movimiento",
+    label: "Stagger desde posiciones aleatorias",
+    code: `const chars = splitChars(el);
+gsap.from(chars, {
+  x: () => gsap.utils.random(-220, 220), y: () => gsap.utils.random(-160, 160),
+  rotation: () => gsap.utils.random(-90, 90), opacity: 0, stagger: 0.02, duration: 0.9, ease: "power3.out",
+  scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      const chars = splitChars(el, el.dataset.text);
+      const t = gsap.from(chars, {
+        x: () => gsap.utils.random(-220, 220), y: () => gsap.utils.random(-160, 160),
+        rotation: () => gsap.utils.random(-90, 90), opacity: 0, stagger: 0.02, duration: 0.9, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 80%", toggleActions: TOGGLE },
+      });
+      return fromTween(t);
+    },
+  },
+  {
+    id: "wave",
+    group: "Movimiento",
+    label: "Wave / onda",
+    code: `// onda viajera por las letras vinculada al scroll
+const chars = splitChars(el);
+gsap.to(chars, { y: -28, ease: "sine.inOut",
+  stagger: { each: 0.06, from: "start", yoyo: true, repeat: 1 },
+  scrollTrigger: { trigger: el, start: "top 85%", end: "bottom 40%", scrub: true } });`,
+    run(el) {
+      const chars = splitChars(el, el.dataset.text);
+      const t = gsap.to(chars, {
+        y: -28, ease: "sine.inOut",
+        stagger: { each: 0.06, from: "start", yoyo: true, repeat: 1 },
+        scrollTrigger: { trigger: el, start: "top 85%", end: "bottom 40%", scrub: true },
+      });
+      return fromTween(t);
+    },
+  },
+
+  // ===================== TIPOGRAFÍA / GLITCH (nuevos) =====================
+  {
+    id: "scramble",
+    group: "Tipografía / Glitch",
+    label: "Scramble / decode",
+    code: `// las letras pasan por glifos aleatorios hasta "decodificar"
+const chars = splitChars(el);
+const targets = chars.map(c => c.textContent);
+const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@%&*";
+// en onEnter, un rAF va fijando cada letra de forma escalonada`,
+    run(el) {
+      const chars = splitChars(el, el.dataset.text);
+      const targets = chars.map((c) => c.textContent);
+      const GLYPHS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789#@%&*";
+      const PER = 45, LOCK = 220;
+      let raf, start;
+      const frame = (now) => {
+        const t = now - start;
+        let pending = false;
+        chars.forEach((c, i) => {
+          const lockAt = i * PER + 200;
+          if (t >= lockAt) { c.textContent = targets[i]; }
+          else { pending = true; c.textContent = GLYPHS[Math.floor(Math.random() * GLYPHS.length)]; }
+        });
+        if (pending || performance.now() - start < chars.length * PER + LOCK) raf = requestAnimationFrame(frame);
+      };
+      const begin = () => { cancelAnimationFrame(raf); start = performance.now(); raf = requestAnimationFrame(frame); };
+      const reset = () => { cancelAnimationFrame(raf); chars.forEach((c, i) => { c.textContent = targets[i]; }); };
+      const st = ScrollTrigger.create({ trigger: el, start: "top 80%", onEnter: begin, onEnterBack: begin, onLeave: reset });
+      return () => { st.kill(); cancelAnimationFrame(raf); };
+    },
+  },
+  {
+    id: "typewriter",
+    group: "Tipografía / Glitch",
+    label: "Typewriter",
+    code: `const chars = splitChars(el);
+el.classList.add("te-typewriter"); // cursor parpadeante via CSS
+gsap.set(chars, { opacity: 0 });
+gsap.to(chars, { opacity: 1, duration: 0.01, stagger: 0.07, ease: "none",
+  scrollTrigger: { trigger: el, start: "top 80%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      const chars = splitChars(el, el.dataset.text);
+      el.classList.add("te-typewriter");
+      gsap.set(chars, { opacity: 0 });
+      const t = gsap.to(chars, {
+        opacity: 1, duration: 0.01, stagger: 0.07, ease: "none",
+        scrollTrigger: { trigger: el, start: "top 80%", toggleActions: TOGGLE },
+      });
+      return () => { fromTween(t)(); el.classList.remove("te-typewriter"); };
+    },
+  },
+  {
+    id: "glitch",
+    group: "Tipografía / Glitch",
+    label: "Glitch / RGB split",
+    code: `// la clase .te-glitch (CSS) aplica la distorsión mientras está en viewport
+ScrollTrigger.create({ trigger: el, start: "top 85%", end: "bottom 15%",
+  toggleClass: { targets: el, className: "te-glitch" } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      const st = ScrollTrigger.create({
+        trigger: el, start: "top 85%", end: "bottom 15%",
+        toggleClass: { targets: el, className: "te-glitch" },
+      });
+      return () => { st.kill(); el.classList.remove("te-glitch"); };
+    },
+  },
+  {
+    id: "odometer",
+    group: "Tipografía / Glitch",
+    label: "Counter / odometer",
+    code: `// cada carácter rueda verticalmente (tipo cuentakilómetros) hasta el final
+// se construye una columna de glifos por carácter y se desplaza con translateY`,
+    run(el) {
+      const text = el.dataset.text;
+      el.innerHTML = "";
+      const cols = [];
+      const N = 8;
+      for (const ch of text) {
+        if (/\s/.test(ch)) { el.appendChild(document.createTextNode(ch)); continue; }
+        const slot = document.createElement("span");
+        slot.className = "te-slot";
+        const col = document.createElement("span");
+        col.className = "te-slot-col";
+        const isDigit = /\d/.test(ch);
+        for (let i = 0; i < N; i++) {
+          const g = document.createElement("span");
+          g.textContent = isDigit
+            ? String(Math.floor(Math.random() * 10))
+            : String.fromCharCode(65 + Math.floor(Math.random() * 26));
+          col.appendChild(g);
+        }
+        const fin = document.createElement("span");
+        fin.textContent = ch;
+        col.appendChild(fin);
+        slot.appendChild(col);
+        el.appendChild(slot);
+        cols.push(col);
+      }
+      const endPct = -(N / (N + 1)) * 100;
+      const t = gsap.fromTo(cols,
+        { yPercent: 0 },
+        { yPercent: endPct, duration: 1.1, ease: "power3.out", stagger: 0.06,
+          scrollTrigger: { trigger: el, start: "top 80%", toggleActions: TOGGLE } });
+      return () => { fromTween(t)(); el.innerHTML = ""; el.textContent = el.dataset.text; };
+    },
+  },
+
+  // ===================== COLOR / ESTILO (nuevos) =====================
+  {
+    id: "gradient",
+    group: "Color / Tipografía",
+    label: "Gradient text animado",
+    code: `// gradiente multicolor que se desplaza de forma continua (CSS)
+el.classList.add("te-gradient");`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      el.classList.add("te-gradient");
+      const st = ScrollTrigger.create({
+        trigger: el, start: "top 85%", end: "bottom 15%",
+        onEnter: () => el.classList.add("te-playing"),
+        onLeave: () => el.classList.remove("te-playing"),
+        onEnterBack: () => el.classList.add("te-playing"),
+        onLeaveBack: () => el.classList.remove("te-playing"),
+      });
+      return () => { st.kill(); el.classList.remove("te-gradient", "te-playing"); };
+    },
+  },
+  {
+    id: "outline-fill",
+    group: "Color / Tipografía",
+    label: "Outline → fill",
+    code: `// el texto empieza con contorno y se rellena de abajo a arriba con el scroll
+el.classList.add("te-outline");
+gsap.fromTo(el, { "--fill": "0%" }, { "--fill": "100%", ease: "none",
+  scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: true } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      el.classList.add("te-outline");
+      const t = gsap.fromTo(el,
+        { "--fill": "0%" },
+        { "--fill": "100%", ease: "none",
+          scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 45%", scrub: true } });
+      return () => { fromTween(t)(); el.classList.remove("te-outline"); };
+    },
+  },
+  {
+    id: "neon",
+    group: "Color / Tipografía",
+    label: "Neon flicker",
+    code: `// encendido tipo letrero de neón con parpadeo (CSS)
+ScrollTrigger.create({ trigger: el, start: "top 85%", end: "bottom 15%",
+  toggleClass: { targets: el, className: "te-neon" } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      const st = ScrollTrigger.create({
+        trigger: el, start: "top 85%", end: "bottom 15%",
+        toggleClass: { targets: el, className: "te-neon" },
+      });
+      return () => { st.kill(); el.classList.remove("te-neon"); };
+    },
+  },
+
+  // ===================== 3D / PROFUNDIDAD (nuevos) =====================
+  {
+    id: "rotate-block",
+    group: "Escala / 3D",
+    label: "3D rotate del bloque",
+    code: `gsap.set(el.parentElement, { perspective: 900 });
+gsap.from(el, { rotationY: 90, opacity: 0, transformOrigin: "left center", duration: 1, ease: "power3.out",
+  scrollTrigger: { trigger: el, start: "top 82%", toggleActions: "play none none reverse" } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      gsap.set(el.parentElement, { perspective: 900 });
+      const t = gsap.from(el, {
+        rotationY: 90, opacity: 0, transformOrigin: "left center", duration: 1, ease: "power3.out",
+        scrollTrigger: { trigger: el, start: "top 82%", toggleActions: TOGGLE },
+      });
+      return () => { fromTween(t)(); el.parentElement.style.perspective = ""; };
+    },
+  },
+  {
+    id: "depth-stack",
+    group: "Escala / 3D",
+    label: "Depth stack (extrusión)",
+    code: `// extrusión 3D con capas (CSS) + ligera rotación vinculada al scroll
+el.classList.add("te-depth");
+gsap.set(el.parentElement, { perspective: 900 });
+gsap.fromTo(el, { rotationY: 28 }, { rotationY: -28, ease: "none",
+  scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 40%", scrub: true } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      el.classList.add("te-depth");
+      gsap.set(el.parentElement, { perspective: 900 });
+      const t = gsap.fromTo(el,
+        { rotationY: 28 },
+        { rotationY: -28, ease: "none",
+          scrollTrigger: { trigger: el, start: "top 80%", end: "bottom 40%", scrub: true } });
+      return () => { fromTween(t)(); el.classList.remove("te-depth"); el.parentElement.style.perspective = ""; };
+    },
+  },
+  {
+    id: "arc",
+    group: "Escala / 3D",
+    label: "Curve / arc text",
+    code: `// el texto se dispone sobre una curva (SVG textPath) y entra con el scroll
+// se genera un <svg> con un <path> en arco y un <textPath> centrado`,
+    run(el) {
+      const text = el.dataset.text;
+      const size = parseFloat(el.style.fontSize || 64);
+      el.innerHTML = "";
+      const NS = "http://www.w3.org/2000/svg";
+      const W = 1000, H = 360;
+      const svg = document.createElementNS(NS, "svg");
+      svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+      svg.setAttribute("width", "100%");
+      svg.style.overflow = "visible";
+      const defs = document.createElementNS(NS, "defs");
+      const path = document.createElementNS(NS, "path");
+      const pid = "arc-" + Math.random().toString(36).slice(2);
+      path.setAttribute("id", pid);
+      path.setAttribute("fill", "none");
+      path.setAttribute("d", `M 60 ${H - 70} Q ${W / 2} 40 ${W - 60} ${H - 70}`);
+      defs.appendChild(path);
+      svg.appendChild(defs);
+      const t = document.createElementNS(NS, "text");
+      t.setAttribute("fill", "currentColor");
+      t.setAttribute("font-size", String(size));
+      t.style.fontFamily = el.style.fontFamily;
+      t.style.fontWeight = el.style.fontWeight;
+      const tp = document.createElementNS(NS, "textPath");
+      tp.setAttribute("href", "#" + pid);
+      tp.setAttributeNS("http://www.w3.org/1999/xlink", "href", "#" + pid);
+      tp.setAttribute("startOffset", "50%");
+      tp.setAttribute("text-anchor", "middle");
+      tp.textContent = text;
+      t.appendChild(tp);
+      svg.appendChild(t);
+      el.appendChild(svg);
+      const tw = gsap.fromTo(tp,
+        { attr: { startOffset: "0%" }, opacity: 0 },
+        { attr: { startOffset: "50%" }, opacity: 1, ease: "none",
+          scrollTrigger: { trigger: el, start: "top 80%", end: "center 55%", scrub: true } });
+      return () => { fromTween(tw)(); el.innerHTML = ""; el.textContent = el.dataset.text; };
+    },
+  },
+
+  // ===================== SCRUB AVANZADOS (nuevos) =====================
+  {
+    id: "pin-reveal",
+    group: "Scrub",
+    label: "Pin + reveal",
+    code: `// la sección se fija y el texto se revela por palabras mientras está pinneada
+const section = el.closest(".te-section");
+const words = splitWords(el);
+gsap.set(words, { opacity: 0.12 });
+gsap.to(words, { opacity: 1, stagger: 0.4, ease: "none",
+  scrollTrigger: { trigger: section, start: "top top", end: "+=120%", scrub: true, pin: true } });`,
+    run(el) {
+      const section = el.closest(".te-section");
+      const words = splitWords(el, el.dataset.text);
+      gsap.set(words, { opacity: 0.12 });
+      const t = gsap.to(words, {
+        opacity: 1, stagger: 0.4, ease: "none",
+        scrollTrigger: { trigger: section, start: "top top", end: "+=120%", scrub: true, pin: true, pinSpacing: true },
+      });
+      return () => { if (t.scrollTrigger) t.scrollTrigger.kill(); t.kill(); };
+    },
+  },
+  {
+    id: "horizontal",
+    group: "Scrub",
+    label: "Horizontal scroll",
+    code: `// el texto se desplaza horizontalmente al hacer scroll vertical
+el.style.whiteSpace = "nowrap";
+gsap.fromTo(el, { xPercent: 60 }, { xPercent: -60, ease: "none",
+  scrollTrigger: { trigger: el.closest(".te-section"), start: "top bottom", end: "bottom top", scrub: true } });`,
+    run(el) {
+      setPlain(el, el.dataset.text);
+      el.style.whiteSpace = "nowrap";
+      const t = gsap.fromTo(el,
+        { xPercent: 60 },
+        { xPercent: -60, ease: "none",
+          scrollTrigger: { trigger: el.closest(".te-section"), start: "top bottom", end: "bottom top", scrub: true } });
+      return () => { fromTween(t)(); el.style.whiteSpace = ""; };
+    },
+  },
 ];

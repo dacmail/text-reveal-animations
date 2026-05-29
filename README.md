@@ -6,7 +6,7 @@ Librería/escaparate de **efectos de aparición de texto vinculados al scroll**,
 
 ## Características
 
-- **24 efectos** agrupados: visibilidad, máscara/clip, color, movimiento, escala/3D, tipografía dinámica y scrub vinculado al scroll.
+- **44 efectos** agrupados: visibilidad, máscara/clip, color, movimiento/física, escala/3D, tipografía/glitch, y scrub vinculado al scroll (incluye scramble, typewriter, glitch, odometer, neon, gradient, arc/curve, pin+reveal, horizontal scroll, etc.).
 - Entrada de **texto propio** (límite de caracteres configurable).
 - Selector de **fuente** (Google Fonts curadas, incluyendo fuentes variables), **peso** y **tamaño**.
 - **Dark / light mode** (persistido, respeta la preferencia del sistema).
