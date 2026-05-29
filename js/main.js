@@ -82,14 +82,8 @@ function applyStyle(state) {
 }
 
 function runEffects() {
-  // Limpiar timelines/triggers previos
-  cleanups.forEach((fn) => { try { fn(); } catch (_) {} });
-  cleanups = [];
-
   EFFECTS.forEach((effect) => {
     const el = effect._el;
-    // Reset de propiedades que los efectos puedan haber dejado fijadas
-    gsap.set(el, { clearProps: "all" });
     const cleanup = effect.run(el, { gsap, ScrollTrigger });
     if (typeof cleanup === "function") cleanups.push(cleanup);
   });
@@ -99,6 +93,16 @@ function runEffects() {
 
 async function apply(state) {
   await loadFont(state.font);
+
+  // Limpiar timelines/triggers previos y resetear propiedades que los
+  // efectos puedan haber dejado fijadas (transform, filter, fontWeight...).
+  cleanups.forEach((fn) => { try { fn(); } catch (_) {} });
+  cleanups = [];
+  document.querySelectorAll(".te-text").forEach((el) => {
+    gsap.set(el, { clearProps: "all" });
+  });
+
+  // IMPORTANTE: aplicar los estilos DESPUÉS del clearProps, si no se borran.
   applyStyle(state);
   runEffects();
 }
