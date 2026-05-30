@@ -63,12 +63,15 @@ a { color: var(--accent); }
 }
 
 .field { display: flex; flex-direction: column; gap: 0.3rem; position: relative; }
+.field.size { align-self: start; }
 .field > span {
   font-size: 0.58rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--muted);
 }
+
+.field.size > span { margin-bottom: 1rem; }
 .field em { color: var(--text); font-style: normal; }
 
 .field input[type="text"],
